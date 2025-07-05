@@ -7,3 +7,9 @@ tasks:
     desc: 'run QR code app with local config'
     cmds:
       - go run ./cmd/qrcode/main.go --config=./config/local.yaml
+  generate:
+    aliases:
+      - proto
+    desc: 'Generate code from proto files'
+    cmds:
+      - protoc -I proto proto/qrcode.proto --go_out=./pkg/grpc/gen/go/qrcode --go_opt=paths=source_relative --go-grpc_out=./pkg/grpc/gen/go/qrcode --go-grpc_opt=paths=source_relative
