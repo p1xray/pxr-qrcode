@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package qrcode;
+
+option go_package = "pxr.qrcode;qrcodepb;";
+
+service QrCode {
+  rpc Generate(GenerateRequest) returns (GenerateResponse);
+}
+
+message GenerateRequest {
+  string url = 1;
+}
+
+message GenerateResponse {
+  string qrCode = 1;
+}
