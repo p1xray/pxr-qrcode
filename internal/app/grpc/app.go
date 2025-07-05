@@ -2,6 +2,7 @@ package grpcapp
 
 import (
 	"fmt"
+	qrcodeserver "github.com/p1xray/pxr-qrcode/internal/grpc/qrcode"
 	"log/slog"
 	"net"
 
@@ -22,7 +23,7 @@ func New(
 ) *App {
 	gRPCServer := grpc.NewServer()
 
-	// TODO: register gRPC server
+	qrcodeserver.Register(gRPCServer)
 
 	return &App{
 		log:        log,
