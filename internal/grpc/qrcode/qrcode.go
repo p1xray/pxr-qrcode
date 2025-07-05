@@ -13,8 +13,8 @@ type serverAPI struct {
 }
 
 // Register registers the implementation of the API service with the gRPC server.
-func Register(gRPC *grpc.Server) {
-	qrcodepb.RegisterQrCodeServer(gRPC, &serverAPI{})
+func Register(gRPC *grpc.Server, service server.QRCodeService) {
+	qrcodepb.RegisterQrCodeServer(gRPC, &serverAPI{service: service})
 }
 
 func (s *serverAPI) Generate(
@@ -25,7 +25,7 @@ func (s *serverAPI) Generate(
 		return nil, err
 	}
 
-	qrCode, err := s.service.GenerateBase64(ctx, req.GetUrl())
+	qrCode, err := s.service.GenerateBase64(req.GetUrl())
 	if err != nil {
 		return nil, server.InternalError("error generating QR-code")
 	}

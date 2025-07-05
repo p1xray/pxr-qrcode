@@ -2,6 +2,7 @@ package app
 
 import (
 	grpcapp "github.com/p1xray/pxr-qrcode/internal/app/grpc"
+	"github.com/p1xray/pxr-qrcode/internal/service/qrcode"
 	"log/slog"
 )
 
@@ -15,9 +16,9 @@ func New(
 	log *slog.Logger,
 	grpcPort int,
 ) *App {
-	// TODO: create service
+	qrCodeService := qrcode.New()
 
-	grpcApp := grpcapp.New(log, grpcPort)
+	grpcApp := grpcapp.New(log, grpcPort, qrCodeService)
 
 	return &App{
 		GRPCServer: grpcApp,
