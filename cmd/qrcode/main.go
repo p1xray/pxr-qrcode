@@ -2,10 +2,13 @@ package main
 
 import (
 	"github.com/joho/godotenv"
+	"github.com/p1xray/pxr-qrcode/internal/app"
 	"github.com/p1xray/pxr-qrcode/internal/config"
 	"github.com/p1xray/pxr-qrcode/internal/lib/logger/handlers/slogpretty"
 	"log/slog"
 	"os"
+	"os/signal"
+	"syscall"
 )
 
 const (
@@ -25,6 +28,19 @@ func main() {
 	log := setupLogger(cfg.Env)
 
 	log.Info("starting application", slog.Any("config", cfg))
+
+	application := app.New(log, cfg.GRPC.Port)
+
+	go application.GRPCServer.MustRun()
+
+	// Graceful shutdown
+	stop := make(chan os.Signal, 1)
+	signal.Notify(stop, syscall.SIGTERM, syscall.SIGINT)
+
+	<-stop
+
+	application.GRPCServer.Stop()
+	log.Info("application stopped")
 }
 
 func setupLogger(env string) *slog.Logger {
